@@ -1,0 +1,30 @@
+#lang racket
+(define punc-re "[(){}.;.]")
+
+(define int-re "-?[0-9]+")
+
+(define float-re "-?[0-9]*\\.[0-9]+")
+
+;(define (re-table str)
+;  (
+(define (tokenize type [data #f])
+  (list type data))
+
+(define (tokenize-punctuation str)
+  (tokenize
+   (case str
+     [("(") 'OPAREN]
+     [(")") 'CPAREN]
+     [("{") 'OBRACE]
+     [("}") 'CBRACE]
+     [(",") 'COMMA]
+     [(";") 'SEMICOLON]
+     [(".") 'PERIOD])))
+
+
+(define (lex str)
+  (define match (regexp-match punc-re str))
+  (if match
+      (tokenize-punctuation match)
+      '()))
+  

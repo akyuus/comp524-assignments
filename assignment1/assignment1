@@ -1,0 +1,77 @@
+#lang racket
+
+;; a simplistic grammar for Racket:
+;; S-List ::= "(" S-Expr+ ")"
+;; S-Expr ::= Atom | S-List
+;; Atom   ::= Boolean | Number | Fraction | String | Symbol
+
+(define (remove-first s l)
+  (if (< (length l) 1)
+      '()
+      (if (eq? (first l) s)
+          (rest l)
+          (cons (first l) (remove-first s (rest l))))))
+
+(define (insert-after-every x y l)
+  (if (< (length l) 1)
+      '()
+      (if (eq? (first l) x)
+          (cons x (cons y (insert-after-every x y (rest l))))
+          (cons (first l) (insert-after-every x y (rest l))))))
+
+(define (append ls1 ls2)
+  (if #t
+  (flatten (cons ls1 ls2))
+  (append '() '())))
+
+(define (! n)
+  (if (zero? n)
+      1
+      (* n (! (- n 1)))))
+
+(define (square n) (* n n))
+
+(define (square-each items)
+  (if (empty? items)
+      null
+      (cons (square (first items)) (square-each (rest items)))))
+
+(define (sum l1)
+  (if (empty? l1)
+      0
+      (+ (first l1) (sum (rest l1)))))
+
+(define (binary->natural digits)
+  (letrec ([from-n (lambda (accumulator n digits)
+                     (if (empty? digits)
+                         accumulator
+                         (from-n (+ accumulator (* (first digits) (expt 2 n))) (add1 n) (rest digits))))])
+    (from-n 0 0 digits)))
+
+(define (index-of-item x items)
+  (letrec ([index-from-n (lambda (x n items)
+                           (if (eq? x (first items))
+                               n
+                               (index-from-n x (add1 n) (rest items))))])
+    (index-from-n x 0 items)))
+
+(define (divide p q)
+  (letrec ([divide-helper (lambda (p q result)
+                            (if (< p q)
+                                result
+                                (divide-helper (- p q) q (+ 1 result))))])
+    (divide-helper p q 0)))
+
+(define (countdown n)
+  (reverse (range (add1 n))))
+
+(define (zip l1 l2)
+  (map (lambda (x1 x2)
+         (list x1 x2))
+       l1 l2))
+
+(define (sum-of-products l1 l2)
+  (foldl (lambda (x1 x2 accumulator)
+           (+ accumulator (* x1 x2)))
+         0 l1 l2))
+       

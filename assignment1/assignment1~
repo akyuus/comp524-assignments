@@ -1,0 +1,61 @@
+#lang racket
+
+;; a simplistic grammar for Racket:
+;; S-List ::= "(" S-Expr+ ")"
+;; S-Expr ::= Atom | S-List
+;; Atom   ::= Boolean | Number | Fraction | String | Symbol
+
+(define (countdown n)
+  (if (< n 0)
+      '()
+      (if (= n 0)
+          '(0)
+          (cons n (countdown (- n 1))))))
+
+(define (remove-first s l)
+  (if (< (length l) 1)
+      '()
+      (if (eq? (first l) s)
+          (rest l)
+          (cons (first l) (remove-first s (rest l))))))
+
+(define (insert-after-every x y l)
+  (if (< (length l) 1)
+      '()
+      (if (eq? (first l) x)
+          (cons x (cons y (insert-after-every x y (rest l))))
+          (cons (first l) (insert-after-every x y (rest l))))))
+
+(define (zip l1 l2)
+  (if (or (< (length l1) 1) (< (length l2) 1))
+      '()
+      (cons (list (first l1) (first l2)) (zip (rest l1) (rest l2)))))
+
+(define (append ls1 ls2)
+  (if #t
+  (flatten (cons ls1 ls2))
+  (append '() '())))
+
+(define (! n)
+  (if (zero? n)
+      1
+      (* n (! (- n 1)))))
+
+(define (square n) (* n n))
+
+(define (square-each items)
+  (if (empty? items)
+      null
+      (cons (square (first items)) (square-each (rest items)))))
+
+(define (sum l1)
+  (if (empty? l1)
+      0
+      (+ (first l1) (sum (rest l1)))))
+
+(define (binary->natural digits)
+  (letrec ([from-n (lambda (accumulator n digits)
+                     (if (empty? digits)
+                         accumulator
+                         (from-n (+ accumulator (* (first digits) (expt 2 n))) (add1 n) (rest digits))))])
+    (from-n 0 0 digits)))
